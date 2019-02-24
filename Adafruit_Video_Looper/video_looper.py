@@ -240,13 +240,13 @@ class VideoLooper(object):
                         # If pressed key is ESC quit program
                         if event.key == pygame.K_ESCAPE:
                             self.quit()
-	    if (GPIO.input(17) == False)
+            if (GPIO.input(17) == False)
 	        self.quit()
 	        moveini(17)
-	    if (GPIO.input(27) == False)
+            if (GPIO.input(27) == False)
 	        self.quit()
 	        moveini(27)
-	    if (GPIO.input(22) == False)
+            if (GPIO.input(22) == False)
 	        self.quit()
 	        moveini(22)
             # Give the CPU some time to do other tasks.
