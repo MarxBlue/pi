@@ -46,7 +46,7 @@ pom2=False
 pom3=False
 dali=False
 config_path = '/boot/video_looperS.ini'
-pathsGLOBALNA = '/home/pi/S'
+pathsGLOBALNA = ['/home/pi/S/S.mp4']
 
 class VideoLooper(object):
 
@@ -274,7 +274,7 @@ class VideoLooper(object):
                 if not config_path == '/boot/video_looperE.ini':
                     config_path = '/boot/video_looperE.ini'
                     self._player.stop(3)
-                    pathsGLOBALNA = '/home/pi/E'
+                    pathsGLOBALNA = ['/home/pi/E/E.mp4']
                     playlist = self._build_playlist()
                     self._prepare_to_run_playlist(playlist)
                     self._print('English')
@@ -283,7 +283,7 @@ class VideoLooper(object):
                 if not config_path == '/boot/video_looperR.ini':
                     config_path = '/boot/video_looperR.ini'
                     self._player.stop(3)
-                    pathsGLOBALNA = '/home/pi/R'
+                    pathsGLOBALNA = ['/home/pi/R/R.mp4']
                     playlist = self._build_playlist()
                     self._prepare_to_run_playlist(playlist)
                     self._print('Ruski')					
