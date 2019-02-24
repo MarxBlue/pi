@@ -46,6 +46,7 @@ pom2=False
 pom3=False
 dali=False
 config_path = '/boot/video_looperS.ini'
+pathsGLOBALNA = '/home/pi/S'
 
 class VideoLooper(object):
 
@@ -119,11 +120,11 @@ class VideoLooper(object):
         extensions.
         """
         # Get list of paths to search from the file reader.
-        paths = self._reader.search_paths()
+        global pathsGLOBALNA
         # Enumerate all movie files inside those paths.
         movies = []
         for ex in self._extensions:
-            for path in paths:
+            for path in pathsGLOBALNA:
                 # Skip paths that don't exist or are files.
                 if not os.path.exists(path) or not os.path.isdir(path):
                     continue
@@ -226,6 +227,7 @@ class VideoLooper(object):
         global pom1
         global pom2
         global pom3
+        global pathsGLOBALNA
         """Main program loop.  Will never return!"""
         # Get playlist of movies to play from file reader.
         playlist = self._build_playlist()
@@ -263,6 +265,7 @@ class VideoLooper(object):
                 if not config_path == '/boot/video_looperS.ini':
                     config_path = '/boot/video_looperS.ini'
                     self._player.stop(3)
+                    pathsGLOBALNA = '/home/pi/S'
                     playlist = self._build_playlist()
                     self._prepare_to_run_playlist(playlist)
                     self._print('Slovenski')
@@ -271,6 +274,7 @@ class VideoLooper(object):
                 if not config_path == '/boot/video_looperE.ini':
                     config_path = '/boot/video_looperE.ini'
                     self._player.stop(3)
+                    pathsGLOBALNA = '/home/pi/E'
                     playlist = self._build_playlist()
                     self._prepare_to_run_playlist(playlist)
                     self._print('English')
@@ -279,6 +283,7 @@ class VideoLooper(object):
                 if not config_path == '/boot/video_looperR.ini':
                     config_path = '/boot/video_looperR.ini'
                     self._player.stop(3)
+                    pathsGLOBALNA = '/home/pi/R'
                     playlist = self._build_playlist()
                     self._prepare_to_run_playlist(playlist)
                     self._print('Ruski')					
