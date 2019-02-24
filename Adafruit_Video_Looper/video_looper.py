@@ -40,8 +40,6 @@ from model import Playlist
 # - Future file readers and video players can be provided and referenced in the
 #   config to extend the video player use to read from different file sources
 #   or use different video players.
-vrti=true
-
 class VideoLooper(object):
 
     def __init__(self, config_path):
@@ -214,7 +212,6 @@ class VideoLooper(object):
             self._idle_message()
 
     def run(self):
-	    global vrti
         """Main program loop.  Will never return!"""
         # Get playlist of movies to play from file reader.
         playlist = self._build_playlist()
@@ -242,22 +239,35 @@ class VideoLooper(object):
                     if event.type == pygame.KEYDOWN:
                         # If pressed key is ESC quit program
                         if event.key == pygame.K_ESCAPE:
-						    vrti=false
                             self.quit()
-            input_state1 = GPIO.input(17)
-            if input_state1 == False:
-                config_path = '/boot/video_looperS.ini'
+            if (GPIO.input(17) == False)
                 self.quit()
-            input_state2 = GPIO.input(27)
-            elif input_state2 == False:
-                config_path = '/boot/video_looperE.ini'
+                moveini(17)
+            if (GPIO.input(27) == False)
                 self.quit()
-            input_state3 = GPIO.input(22)
-            elif input_state3 == False:
-                config_path = '/boot/video_looperR.ini'
+                moveini(27)
+            if (GPIO.input(22) == False)
                 self.quit()
+                moveini(22)
             # Give the CPU some time to do other tasks.
             time.sleep(0.002)
+			
+    def moveini(broj):	
+        if broj == 17:
+            config_path = '/boot/video_looperS.ini'
+        if broj == 27:
+            config_path = '/boot/video_looperE.ini'
+        if broj == 22:
+            config_path = '/boot/video_looperR.ini'
+        if len(sys.argv) == 2:
+            config_path = sys.argv[1]
+        # Create video looper.
+        videolooper = VideoLooper(config_path)
+        # Configure signal handlers to quit on TERM or INT signal.
+        signal.signal(signal.SIGTERM, videolooper.signal_quit)
+        signal.signal(signal.SIGINT, videolooper.signal_quit)
+        # Run the main loop.
+        videolooper.run()
 
     def quit(self):
         """Shut down the program"""
@@ -269,25 +279,23 @@ class VideoLooper(object):
     def signal_quit(self, signal, frame):
         """Shut down the program, meant to by called by signal handler."""
         self.quit()
-		
+
 # Main entry point.
 if __name__ == '__main__':
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.setup(27, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.setup(22, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    config_path = '/boot/video_looperS.ini'
-    global vrti
-    while vrti:
-	    print('Starting Adafruit Video Looper.')
-	    # Override config path if provided as parameter.
-	    if len(sys.argv) == 2:
-	    	config_path = sys.argv[1]
-	    # Create video looper.
-	    videolooper = VideoLooper(config_path)
-	    # Configure signal handlers to quit on TERM or INT signal.
-	    signal.signal(signal.SIGTERM, videolooper.signal_quit)
-	    signal.signal(signal.SIGINT, videolooper.signal_quit)
-	    # Run the main loop.
-	    videolooper.run()
-	    
+    print('Starting Adafruit Video Looper.')
+    # Default config path to /boot.
+    config_path = '/boot/video_looper.ini'
+    # Override config path if provided as parameter.
+    if len(sys.argv) == 2:
+        config_path = sys.argv[1]
+    # Create video looper.
+    videolooper = VideoLooper(config_path)
+    # Configure signal handlers to quit on TERM or INT signal.
+    signal.signal(signal.SIGTERM, videolooper.signal_quit)
+    signal.signal(signal.SIGINT, videolooper.signal_quit)
+    # Run the main loop.
+    videolooper.run()
