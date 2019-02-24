@@ -223,6 +223,7 @@ class VideoLooper(object):
         while self._running:
             # Load and play a new movie if nothing is playing.
             if not self._player.is_playing():
+				dali=True
                 movie = playlist.get_next()
                 if movie is not None:
                     # Start playing the first available movie.
@@ -244,18 +245,39 @@ class VideoLooper(object):
                         if event.key == pygame.K_ESCAPE:
                             vrti=False
                             self.quit()
-            input_state1 = GPIO.input(17)
-            if input_state1 == False:
-                config_path = '/boot/video_looperS.ini'
-                self.quit()
-            input_state2 = GPIO.input(27)
-            if input_state2 == False:
-                config_path = '/boot/video_looperE.ini'
-                self.quit()
-            input_state3 = GPIO.input(22)
-            if input_state3 == False:
-                config_path = '/boot/video_looperR.ini'
-                self.quit()
+            
+			if dali==True:
+                input_state1 = GPIO.input(17)
+                if input_state1 == False:
+                    pom1=True
+                input_state2 = GPIO.input(27)
+                if input_state2 == False:
+                    pom2=True
+                input_state3 = GPIO.input(22)
+                if input_state3 == False:
+			        pom3=True
+            if dali==True:
+                input_state4 = GPIO.input(17)
+                if not config_path == '/boot/video_looperS.ini':
+                    if input_state4 == False or pom1==True:
+                        pom1=False
+                        dali=False
+                        config_path = '/boot/video_looperS.ini'
+                        self.quit()
+                input_state5 = GPIO.input(27)
+                if not config_path=='/boot/video_looperE.ini':
+                    if input_state5 == False or pom2==True:
+                        pom2=False
+                        dali=False
+                        config_path = '/boot/video_looperE.ini'
+                        self.quit()
+                input_state6 = GPIO.input(22)
+                if not config_path == '/boot/video_looperR.ini':
+                    if input_state6 == False or pom3==True:
+                        pom3=False
+			            dali=False
+                        config_path = '/boot/video_looperR.ini'
+                        self.quit()
             # Give the CPU some time to do other tasks.
             time.sleep(0.002)
 
