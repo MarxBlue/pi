@@ -247,18 +247,17 @@ class VideoLooper(object):
             if input_state1 == False:
                 config_path = '/boot/video_looperS.ini'
                 self.quit()
-			input_state2 = GPIO.input(27)
+            input_state2 = GPIO.input(27)
             elif input_state2 == False:
                 config_path = '/boot/video_looperE.ini'
                 self.quit()
-			input_state3 = GPIO.input(22)
+            input_state3 = GPIO.input(22)
             elif input_state3 == False:
                 config_path = '/boot/video_looperR.ini'
                 self.quit()
             # Give the CPU some time to do other tasks.
             time.sleep(0.002)
-			
-    
+
     def quit(self):
         """Shut down the program"""
         self._running = False
@@ -276,8 +275,8 @@ if __name__ == '__main__':
     GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.setup(27, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.setup(22, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-	config_path = '/boot/video_looperS.ini'
-	while vrti:
+    config_path = '/boot/video_looperS.ini'
+    while vrti:
 	    print('Starting Adafruit Video Looper.')
 	    # Override config path if provided as parameter.
 	    if len(sys.argv) == 2:
