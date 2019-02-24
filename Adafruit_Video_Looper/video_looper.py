@@ -240,27 +240,27 @@ class VideoLooper(object):
                         # If pressed key is ESC quit program
                         if event.key == pygame.K_ESCAPE:
                             self.quit()
-			if (GPIO.input(17) == False)
-			    self.quit()
-			    moveini(17)
-			if (GPIO.input(27) == False)
-			    self.quit()
-			    moveini(27)
-			if (GPIO.input(22) == False)
-			    self.quit()
-			    moveini(22)
+	    if (GPIO.input(17) == False)
+	        self.quit()
+	        moveini(17)
+	    if (GPIO.input(27) == False)
+	        self.quit()
+	        moveini(27)
+	    if (GPIO.input(22) == False)
+	        self.quit()
+	        moveini(22)
             # Give the CPU some time to do other tasks.
             time.sleep(0.002)
 			
 	def moveini(broj):	
 	    if broj == 17:
-            config_path = '/boot/video_looperS.ini'
-        if broj == 27:
-            config_path = '/boot/video_looperE.ini'
-		if broj == 22:
-            config_path = '/boot/video_looperR.ini'
-		if len(sys.argv) == 2:
-            config_path = sys.argv[1]
+               config_path = '/boot/video_looperS.ini'
+            if broj == 27:
+               config_path = '/boot/video_looperE.ini'
+            if broj == 22:
+               config_path = '/boot/video_looperR.ini'
+            if len(sys.argv) == 2:
+               config_path = sys.argv[1]
         # Create video looper.
         videolooper = VideoLooper(config_path)
         # Configure signal handlers to quit on TERM or INT signal.
@@ -283,11 +283,11 @@ class VideoLooper(object):
 
 # Main entry point.
 if __name__ == '__main__':
-	GPIO.setmode(GPIO.BCM)
+    GPIO.setmode(GPIO.BCM)
     GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-	GPIO.setmode(GPIO.BCM)
+    GPIO.setmode(GPIO.BCM)
     GPIO.setup(27, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-	GPIO.setmode(GPIO.BCM)
+    GPIO.setmode(GPIO.BCM)
     GPIO.setup(22, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     print('Starting Adafruit Video Looper.')
     # Default config path to /boot.
