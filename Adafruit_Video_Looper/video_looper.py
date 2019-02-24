@@ -41,6 +41,10 @@ from model import Playlist
 #   config to extend the video player use to read from different file sources
 #   or use different video players.
 vrti=True
+pom1=False
+pom2=False
+pom3=False
+dali=False
 
 class VideoLooper(object):
 
@@ -214,7 +218,11 @@ class VideoLooper(object):
             self._idle_message()
 
     def run(self):
+        global dali
         global vrti
+        global pom1
+        global pom2
+        global pom3
         """Main program loop.  Will never return!"""
         # Get playlist of movies to play from file reader.
         playlist = self._build_playlist()
@@ -223,12 +231,14 @@ class VideoLooper(object):
         while self._running:
             # Load and play a new movie if nothing is playing.
             if not self._player.is_playing():
-				dali=True
+				dali=False
                 movie = playlist.get_next()
                 if movie is not None:
                     # Start playing the first available movie.
                     self._print('Playing movie: {0}'.format(movie))
                     self._player.play(movie, loop=playlist.length() == 1, vol = self._sound_vol)
+            if self._player.is_playing():
+                dali=True
             # Check for changes in the file search path (like USB drives added)
             # and rebuild the playlist.
             if self._reader.is_changed():
@@ -246,7 +256,7 @@ class VideoLooper(object):
                             vrti=False
                             self.quit()
             
-			if dali==True:
+			if dali==False:
                 input_state1 = GPIO.input(17)
                 if input_state1 == False:
                     pom1=True
@@ -261,21 +271,18 @@ class VideoLooper(object):
                 if not config_path == '/boot/video_looperS.ini':
                     if input_state4 == False or pom1==True:
                         pom1=False
-                        dali=False
                         config_path = '/boot/video_looperS.ini'
                         self.quit()
                 input_state5 = GPIO.input(27)
                 if not config_path=='/boot/video_looperE.ini':
                     if input_state5 == False or pom2==True:
                         pom2=False
-                        dali=False
                         config_path = '/boot/video_looperE.ini'
                         self.quit()
                 input_state6 = GPIO.input(22)
                 if not config_path == '/boot/video_looperR.ini':
                     if input_state6 == False or pom3==True:
                         pom3=False
-			            dali=False
                         config_path = '/boot/video_looperR.ini'
                         self.quit()
             # Give the CPU some time to do other tasks.
