@@ -241,14 +241,14 @@ class VideoLooper(object):
                         if event.key == pygame.K_ESCAPE:
                             self.quit()
             if (GPIO.input(17) == False)
-	        self.quit()
-	        moveini(17)
+                self.quit()
+                moveini(17)
             if (GPIO.input(27) == False)
-	        self.quit()
-	        moveini(27)
+                self.quit()
+                moveini(27)
             if (GPIO.input(22) == False)
-	        self.quit()
-	        moveini(22)
+                self.quit()
+                moveini(22)
             # Give the CPU some time to do other tasks.
             time.sleep(0.002)
 			
