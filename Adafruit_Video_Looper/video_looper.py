@@ -214,7 +214,7 @@ class VideoLooper(object):
             self._idle_message()
 
     def run(self):
-	    global vrti
+        global vrti
         """Main program loop.  Will never return!"""
         # Get playlist of movies to play from file reader.
         playlist = self._build_playlist()
@@ -242,18 +242,18 @@ class VideoLooper(object):
                     if event.type == pygame.KEYDOWN:
                         # If pressed key is ESC quit program
                         if event.key == pygame.K_ESCAPE:
-						    vrti=False
+                            vrti=False
                             self.quit()
             input_state1 = GPIO.input(17)
             if input_state1 == False:
                 config_path = '/boot/video_looperS.ini'
                 self.quit()
             input_state2 = GPIO.input(27)
-            elif input_state2 == False:
+            if input_state2 == False:
                 config_path = '/boot/video_looperE.ini'
                 self.quit()
             input_state3 = GPIO.input(22)
-            elif input_state3 == False:
+            if input_state3 == False:
                 config_path = '/boot/video_looperR.ini'
                 self.quit()
             # Give the CPU some time to do other tasks.
@@ -277,17 +277,16 @@ if __name__ == '__main__':
     GPIO.setup(27, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.setup(22, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     config_path = '/boot/video_looperS.ini'
-    global vrti
     while vrti:
-	    print('Starting Adafruit Video Looper.')
-	    # Override config path if provided as parameter.
-	    if len(sys.argv) == 2:
-	    	config_path = sys.argv[1]
-	    # Create video looper.
-	    videolooper = VideoLooper(config_path)
-	    # Configure signal handlers to quit on TERM or INT signal.
-	    signal.signal(signal.SIGTERM, videolooper.signal_quit)
-	    signal.signal(signal.SIGINT, videolooper.signal_quit)
-	    # Run the main loop.
-	    videolooper.run()
+        print('Starting Adafruit Video Looper.')
+        # Override config path if provided as parameter.
+        if len(sys.argv) == 2:
+        	config_path = sys.argv[1]
+        # Create video looper.
+        videolooper = VideoLooper(config_path)
+        # Configure signal handlers to quit on TERM or INT signal.
+        signal.signal(signal.SIGTERM, videolooper.signal_quit)
+        signal.signal(signal.SIGINT, videolooper.signal_quit)
+        # Run the main loop.
+        videolooper.run()
 	    
