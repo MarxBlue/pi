@@ -45,17 +45,18 @@ pom1=False
 pom2=False
 pom3=False
 dali=False
+config_path = '/boot/video_looperS.ini'
 
 class VideoLooper(object):
 
-    def __init__(self, config_path):
+    def __init__(self, config_pathB):
         """Create an instance of the main video looper application class. Must
         pass path to a valid video looper ini configuration file.
         """
         # Load the configuration.
         self._config = ConfigParser.SafeConfigParser()
-        if len(self._config.read(config_path)) == 0:
-            raise RuntimeError('Failed to find configuration file at {0}, is the application properly installed?'.format(config_path))
+        if len(self._config.read(config_pathB)) == 0:
+            raise RuntimeError('Failed to find configuration file at {0}, is the application properly installed?'.format(config_pathB))
         self._console_output = self._config.getboolean('video_looper', 'console_output')
         # Load configured video player and file reader modules.
         self._player = self._load_player()
@@ -218,6 +219,7 @@ class VideoLooper(object):
             self._idle_message()
 
     def run(self):
+        global config_path
         global dali
         global vrti
         global pom1
@@ -231,7 +233,7 @@ class VideoLooper(object):
         while self._running:
             # Load and play a new movie if nothing is playing.
             if not self._player.is_playing():
-				dali=False
+                dali=False
                 movie = playlist.get_next()
                 if movie is not None:
                     # Start playing the first available movie.
@@ -256,17 +258,17 @@ class VideoLooper(object):
                             vrti=False
                             self.quit()
             input_state1 = GPIO.input(17)
-			if input_state1 == False:
+            if input_state1 == False:
                 if not config_path == '/boot/video_looperS.ini':
                     config_path = '/boot/video_looperS.ini'
-			    	self.quit()
+                    self.quit()
             input_state2 = GPIO.input(27)
-			if input_state2 == False:
+            if input_state2 == False:
                 if not config_path == '/boot/video_looperE.ini':
                     config_path = '/boot/video_looperE.ini'
-			    	self.quit()
+                    self.quit()
             input_state3 = GPIO.input(22)
-			if input_state3 == False:
+            if input_state3 == False:
                 if not config_path == '/boot/video_looperR.ini':
                     config_path = '/boot/video_looperR.ini'
                     self.quit()					
@@ -290,8 +292,7 @@ if __name__ == '__main__':
     GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.setup(27, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.setup(22, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    config_path = '/boot/video_looperS.ini'
-	vrti=True
+    vrti=True
     while vrti:
         print('Starting Adafruit Video Looper.')
         # Override config path if provided as parameter.
