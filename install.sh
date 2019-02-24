@@ -29,6 +29,10 @@ echo "=================================="
 mkdir -p /mnt/usbdrive0 # This is very important if you put your system in readonly after
 python setup.py install --force
 cp video_looper.ini /boot/video_looper.ini
+cp video_looperS.ini /boot/video_looperS.ini
+cp video_looperE.ini /boot/video_looperE.ini
+cp video_looperR.ini /boot/video_looperR.ini
+
 
 echo "Configuring video_looper to run on start..."
 echo "==========================================="
