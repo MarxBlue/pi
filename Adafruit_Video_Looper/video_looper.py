@@ -40,16 +40,23 @@ from model import Playlist
 # - Future file readers and video players can be provided and referenced in the
 #   config to extend the video player use to read from different file sources
 #   or use different video players.
+vrti=True
+pom1=False
+pom2=False
+pom3=False
+dali=False
+config_path = '/boot/video_looperS.ini'
+
 class VideoLooper(object):
 
-    def __init__(self, config_path):
+    def __init__(self, config_pathB):
         """Create an instance of the main video looper application class. Must
         pass path to a valid video looper ini configuration file.
         """
         # Load the configuration.
         self._config = ConfigParser.SafeConfigParser()
-        if len(self._config.read(config_path)) == 0:
-            raise RuntimeError('Failed to find configuration file at {0}, is the application properly installed?'.format(config_path))
+        if len(self._config.read(config_pathB)) == 0:
+            raise RuntimeError('Failed to find configuration file at {0}, is the application properly installed?'.format(config_pathB))
         self._console_output = self._config.getboolean('video_looper', 'console_output')
         # Load configured video player and file reader modules.
         self._player = self._load_player()
@@ -212,6 +219,13 @@ class VideoLooper(object):
             self._idle_message()
 
     def run(self):
+        self._print('Usao u funkciju RUN')
+        global config_path
+        global dali
+        global vrti
+        global pom1
+        global pom2
+        global pom3
         """Main program loop.  Will never return!"""
         # Get playlist of movies to play from file reader.
         playlist = self._build_playlist()
@@ -220,11 +234,14 @@ class VideoLooper(object):
         while self._running:
             # Load and play a new movie if nothing is playing.
             if not self._player.is_playing():
+                dali=False
                 movie = playlist.get_next()
                 if movie is not None:
                     # Start playing the first available movie.
                     self._print('Playing movie: {0}'.format(movie))
                     self._player.play(movie, loop=playlist.length() == 1, vol = self._sound_vol)
+            if self._player.is_playing():
+                dali=True
             # Check for changes in the file search path (like USB drives added)
             # and rebuild the playlist.
             if self._reader.is_changed():
@@ -239,65 +256,34 @@ class VideoLooper(object):
                     if event.type == pygame.KEYDOWN:
                         # If pressed key is ESC quit program
                         if event.key == pygame.K_ESCAPE:
+                            vrti=False
                             self.quit()
-            if GPIO.input(17) == False:
-                self.quit()
-                config_path = '/boot/video_looperS.ini'
-                if len(sys.argv) == 2:
-                    config_path = sys.argv[1]
-				# Create video looper.
-                videolooper = VideoLooper(config_path)
-                # Configure signal handlers to quit on TERM or INT signal.
-                signal.signal(signal.SIGTERM, videolooper.signal_quit)
-                signal.signal(signal.SIGINT, videolooper.signal_quit)
-                # Run the main loop.
-                videolooper.run()
-            if GPIO.input(27) == False:
-                self.quit()
-                config_path = '/boot/video_looperE.ini'
-                if len(sys.argv) == 2:
-                    config_path = sys.argv[1]
-				# Create video looper.
-                videolooper = VideoLooper(config_path)
-                # Configure signal handlers to quit on TERM or INT signal.
-                signal.signal(signal.SIGTERM, videolooper.signal_quit)
-                signal.signal(signal.SIGINT, videolooper.signal_quit)
-                # Run the main loop.
-                videolooper.run()
-				
-            if GPIO.input(22) == False:
-                self.quit()
-                config_path = '/boot/video_looperR.ini'
-                if len(sys.argv) == 2:
-                    config_path = sys.argv[1]
-				# Create video looper.
-                videolooper = VideoLooper(config_path)
-                # Configure signal handlers to quit on TERM or INT signal.
-                signal.signal(signal.SIGTERM, videolooper.signal_quit)
-                signal.signal(signal.SIGINT, videolooper.signal_quit)
-                # Run the main loop.
-                videolooper.run()
-				
-				
+            input_state1 = GPIO.input(17)
+            if input_state1 == False:
+                if not config_path == '/boot/video_looperS.ini':
+                    config_path = '/boot/video_looperS.ini'
+                    self._player.stop(3)
+                    playlist = self._build_playlist()
+                    self._prepare_to_run_playlist(playlist)
+                    self._print('Slovenski')
+            input_state2 = GPIO.input(27)
+            if input_state2 == False:
+                if not config_path == '/boot/video_looperE.ini':
+                    config_path = '/boot/video_looperE.ini'
+                    self._player.stop(3)
+                    playlist = self._build_playlist()
+                    self._prepare_to_run_playlist(playlist)
+                    self._print('English')
+            input_state3 = GPIO.input(22)
+            if input_state3 == False:
+                if not config_path == '/boot/video_looperR.ini':
+                    config_path = '/boot/video_looperR.ini'
+                    self._player.stop(3)
+                    playlist = self._build_playlist()
+                    self._prepare_to_run_playlist(playlist)
+                    self._print('Ruski')					
             # Give the CPU some time to do other tasks.
             time.sleep(0.002)
-			
-   # def moveini(self, broj):	
-     #   if broj == 17:
-    #        config_path = '/boot/video_looperS.ini'
-     #   if broj == 27:
-      #      config_path = '/boot/video_looperE.ini'
-      #  if broj == 22:
-       #     config_path = '/boot/video_looperR.ini'
-       # if len(sys.argv) == 2:
-      #      config_path = sys.argv[1]
-        # Create video looper.
-     #   videolooper = VideoLooper(config_path)
-        # Configure signal handlers to quit on TERM or INT signal.
-     #   signal.signal(signal.SIGTERM, videolooper.signal_quit)
-     #   signal.signal(signal.SIGINT, videolooper.signal_quit)
-        # Run the main loop.
-     #   videolooper.run()
 
     def quit(self):
         """Shut down the program"""
@@ -309,23 +295,25 @@ class VideoLooper(object):
     def signal_quit(self, signal, frame):
         """Shut down the program, meant to by called by signal handler."""
         self.quit()
-
+		
 # Main entry point.
 if __name__ == '__main__':
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.setup(27, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.setup(22, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    print('Starting Adafruit Video Looper.')
-    # Default config path to /boot.
-    config_path = '/boot/video_looper.ini'
-    # Override config path if provided as parameter.
-    if len(sys.argv) == 2:
-        config_path = sys.argv[1]
-    # Create video looper.
-    videolooper = VideoLooper(config_path)
-    # Configure signal handlers to quit on TERM or INT signal.
-    signal.signal(signal.SIGTERM, videolooper.signal_quit)
-    signal.signal(signal.SIGINT, videolooper.signal_quit)
-    # Run the main loop.
-    videolooper.run()
+    vrti=True
+    while vrti:
+        print('Starting Adafruit Video Looper.')
+        # Override config path if provided as parameter.
+        if len(sys.argv) == 2:
+        	config_path = sys.argv[1]
+        # Create video looper.
+        videolooper = VideoLooper(config_path)
+        videolooper._print('Usao u glavnu veliku while petlju 1')
+        time.sleep(1.000)
+        # Configure signal handlers to quit on TERM or INT signal.
+        signal.signal(signal.SIGTERM, videolooper.signal_quit)
+        signal.signal(signal.SIGINT, videolooper.signal_quit)
+        # Run the main loop.
+        videolooper.run()
