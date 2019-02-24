@@ -9,6 +9,9 @@ import sys
 import signal
 import time
 
+import RPi.GPIO as GPIO
+import subprocess
+
 import pygame
 
 from model import Playlist
@@ -237,6 +240,9 @@ class VideoLooper(object):
                         # If pressed key is ESC quit program
                         if event.key == pygame.K_ESCAPE:
                             self.quit()
+            input_state = GPIO.input(2)
+            if input_state == False:
+                self.quit()
             # Give the CPU some time to do other tasks.
             time.sleep(0.002)
 
@@ -254,6 +260,8 @@ class VideoLooper(object):
 
 # Main entry point.
 if __name__ == '__main__':
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     print('Starting Adafruit Video Looper.')
     # Default config path to /boot.
     config_path = '/boot/video_looper.ini'
