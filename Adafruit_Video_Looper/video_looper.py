@@ -255,36 +255,21 @@ class VideoLooper(object):
                         if event.key == pygame.K_ESCAPE:
                             vrti=False
                             self.quit()
-            
-			if dali==False:
-                input_state1 = GPIO.input(17)
-                if input_state1 == False:
-                    pom1=True
-                input_state2 = GPIO.input(27)
-                if input_state2 == False:
-                    pom2=True
-                input_state3 = GPIO.input(22)
-                if input_state3 == False:
-			        pom3=True
-            if dali==True:
-                input_state4 = GPIO.input(17)
+            input_state1 = GPIO.input(17)
+			if input_state1 == False:
                 if not config_path == '/boot/video_looperS.ini':
-                    if input_state4 == False or pom1==True:
-                        pom1=False
-                        config_path = '/boot/video_looperS.ini'
-                        self.quit()
-                input_state5 = GPIO.input(27)
-                if not config_path=='/boot/video_looperE.ini':
-                    if input_state5 == False or pom2==True:
-                        pom2=False
-                        config_path = '/boot/video_looperE.ini'
-                        self.quit()
-                input_state6 = GPIO.input(22)
+                    config_path = '/boot/video_looperS.ini'
+			    	self.quit()
+            input_state2 = GPIO.input(27)
+			if input_state2 == False:
+                if not config_path == '/boot/video_looperE.ini':
+                    config_path = '/boot/video_looperE.ini'
+			    	self.quit()
+            input_state3 = GPIO.input(22)
+			if input_state3 == False:
                 if not config_path == '/boot/video_looperR.ini':
-                    if input_state6 == False or pom3==True:
-                        pom3=False
-                        config_path = '/boot/video_looperR.ini'
-                        self.quit()
+                    config_path = '/boot/video_looperR.ini'
+                    self.quit()					
             # Give the CPU some time to do other tasks.
             time.sleep(0.002)
 
@@ -306,6 +291,7 @@ if __name__ == '__main__':
     GPIO.setup(27, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.setup(22, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     config_path = '/boot/video_looperS.ini'
+	vrti=True
     while vrti:
         print('Starting Adafruit Video Looper.')
         # Override config path if provided as parameter.
@@ -318,4 +304,3 @@ if __name__ == '__main__':
         signal.signal(signal.SIGINT, videolooper.signal_quit)
         # Run the main loop.
         videolooper.run()
-	    
