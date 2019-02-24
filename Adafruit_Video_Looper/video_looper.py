@@ -252,15 +252,15 @@ class VideoLooper(object):
             # Give the CPU some time to do other tasks.
             time.sleep(0.002)
 			
-	def moveini(broj):	
-	    if broj == 17:
-               config_path = '/boot/video_looperS.ini'
-            if broj == 27:
-               config_path = '/boot/video_looperE.ini'
-            if broj == 22:
-               config_path = '/boot/video_looperR.ini'
-            if len(sys.argv) == 2:
-               config_path = sys.argv[1]
+    def moveini(broj):	
+        if broj == 17:
+            config_path = '/boot/video_looperS.ini'
+        if broj == 27:
+            config_path = '/boot/video_looperE.ini'
+        if broj == 22:
+            config_path = '/boot/video_looperR.ini'
+        if len(sys.argv) == 2:
+            config_path = sys.argv[1]
         # Create video looper.
         videolooper = VideoLooper(config_path)
         # Configure signal handlers to quit on TERM or INT signal.
