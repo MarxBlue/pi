@@ -291,7 +291,7 @@ if __name__ == '__main__':
     GPIO.setup(22, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     print('Starting Adafruit Video Looper.')
     # Default config path to /boot.
-    config_path = '/boot/video_looper.ini'
+    config_path = '/boot/video_looperS.ini'
     # Override config path if provided as parameter.
     if len(sys.argv) == 2:
         config_path = sys.argv[1]
