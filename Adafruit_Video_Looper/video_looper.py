@@ -46,7 +46,7 @@ pom2=False
 pom3=False
 dali=False
 config_path = '/boot/video_looperS.ini'
-pathsGLOBALNA = ['/home/pi/S/S.mp4']
+pathsGLOBALNA = ['/home/pi/S']
 
 class VideoLooper(object):
 
@@ -120,13 +120,14 @@ class VideoLooper(object):
         extensions.
         """
         # Get list of paths to search from the file reader.
-        #global pathsGLOBALNA #<-nakon provere skinuti komentar
-        paths = self._reader.search_paths()
+        global pathsGLOBALNA #<-nakon provere skinuti komentar
+        #paths = self._reader.search_paths()
         # Enumerate all movie files inside those paths.
         movies = []
         for ex in self._extensions:
-            #for path in pathsGLOBALNA:#<-nakon provere skinuti komentar
-            for path in paths:
+            for path in pathsGLOBALNA:#<-nakon provere skinuti komentar
+            #for path in paths:
+                self._print(path)
                 # Skip paths that don't exist or are files.
                 if not os.path.exists(path) or not os.path.isdir(path):
                     continue
@@ -249,7 +250,7 @@ class VideoLooper(object):
             # Check for changes in the file search path (like USB drives added)
             # and rebuild the playlist.
             if self._reader.is_changed():
-                self._player.stop(3)  # Up to 3 second delay waiting for old 
+                self._player.stop(2)  # Up to 3 second delay waiting for old 
                                       # player to stop.
                 # Rebuild playlist and show countdown again (if OSD enabled).
                 playlist = self._build_playlist()
@@ -266,8 +267,8 @@ class VideoLooper(object):
             if input_state1 == False:
                 if not config_path == '/boot/video_looperS.ini':
                     config_path = '/boot/video_looperS.ini'
-                    self._player.stop(3)
-                    pathsGLOBALNA = '/home/pi/S'
+                    self._player.stop(2)
+                    pathsGLOBALNA = ['/home/pi/S']
                     playlist = self._build_playlist()
                     self._prepare_to_run_playlist(playlist)
                     self._print('Slovenski')
@@ -275,8 +276,8 @@ class VideoLooper(object):
             if input_state2 == False:
                 if not config_path == '/boot/video_looperE.ini':
                     config_path = '/boot/video_looperE.ini'
-                    self._player.stop(3)
-                    pathsGLOBALNA = ['/home/pi/E/E.mp4']
+                    self._player.stop(2)
+                    pathsGLOBALNA = ['/home/pi/E']
                     playlist = self._build_playlist()
                     self._prepare_to_run_playlist(playlist)
                     self._print('English')
@@ -284,8 +285,8 @@ class VideoLooper(object):
             if input_state3 == False:
                 if not config_path == '/boot/video_looperR.ini':
                     config_path = '/boot/video_looperR.ini'
-                    self._player.stop(3)
-                    pathsGLOBALNA = ['/home/pi/R/R.mp4']
+                    self._player.stop(2)
+                    pathsGLOBALNA = ['/home/pi/R']
                     playlist = self._build_playlist()
                     self._prepare_to_run_playlist(playlist)
                     self._print('Ruski')					
@@ -318,7 +319,6 @@ if __name__ == '__main__':
         # Create video looper.
         videolooper = VideoLooper(config_path)
         videolooper._print('Usao u glavnu veliku while petlju 1')
-        time.sleep(1.000)
         # Configure signal handlers to quit on TERM or INT signal.
         signal.signal(signal.SIGTERM, videolooper.signal_quit)
         signal.signal(signal.SIGINT, videolooper.signal_quit)
