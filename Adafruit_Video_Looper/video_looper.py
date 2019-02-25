@@ -120,11 +120,13 @@ class VideoLooper(object):
         extensions.
         """
         # Get list of paths to search from the file reader.
-        global pathsGLOBALNA
+        #global pathsGLOBALNA #<-nakon provere skinuti komentar
+        paths = self._reader.search_paths()
         # Enumerate all movie files inside those paths.
         movies = []
         for ex in self._extensions:
-            for path in pathsGLOBALNA:
+            #for path in pathsGLOBALNA:#<-nakon provere skinuti komentar
+            for path in paths:
                 # Skip paths that don't exist or are files.
                 if not os.path.exists(path) or not os.path.isdir(path):
                     continue
